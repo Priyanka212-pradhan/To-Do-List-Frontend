@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';  // Import useNavigate from react-router-dom
 
 const Registration = () => {
     const [username, setUsername] = useState('');
@@ -27,11 +28,16 @@ const Registration = () => {
             });
 
             if (response.status === 201) {
-                setSuccessMessage('Registration successful!');
+                setSuccessMessage('Registration successful! Redirecting to login...');
                 setUsername('');
                 setEmail('');
                 setPassword('');
                 setError('');
+
+                // Redirect to login page after 1 second
+                setTimeout(() => {
+                    navigate('/login');  // Redirect to the login page
+                }, 1000);
             }
         } catch (err) {
             setError('Registration failed. Please try again.');

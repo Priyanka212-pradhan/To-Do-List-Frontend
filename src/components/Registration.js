@@ -9,6 +9,8 @@ const Registration = () => {
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
 
+    const navigate = useNavigate();  // Initialize navigate
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -28,11 +30,16 @@ const Registration = () => {
             });
 
             if (response.status === 201) {
-                setSuccessMessage('Registration successful!');
+                setSuccessMessage('Registration successful! Redirecting to login...');
                 setUsername('');
                 setEmail('');
                 setPassword('');
                 setError('');
+
+                // Redirect to login page after 1 second
+                setTimeout(() => {
+                    navigate('/login');  // Redirect to the login page
+                }, 1000);
             }
         } catch (err) {
             setError('Registration failed. Please try again.');

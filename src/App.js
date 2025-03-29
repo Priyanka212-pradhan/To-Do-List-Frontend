@@ -1,6 +1,7 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Registration from './components/Registration';  // Assuming you have the Registration component
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Registration from './components/Registration';  // Correct path
+import Login from './components/Login';  // Correct path
 
 function App() {
   return (
@@ -8,7 +9,8 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/register" element={<Registration />} />
-          {/* You can add other routes here if you need */}
+          <Route path="/login" element={<Login />} />
+          {/* You can also add a route for the dashboard or home page here */}
         </Routes>
       </div>
     </Router>
