@@ -1,0 +1,101 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';  // Import navigate from react-router-dom
+
+const TaskForm = () => {
+  const [taskTitle, setTaskTitle] = useState('');
+  const [taskDescription, setTaskDescription] = useState('');
+  const [dueDate, setDueDate] = useState('');
+  const [completed, setCompleted] = useState(false);
+  const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+
+  const token = localStorage.getItem('accessToken');  // Get the JWT token from localStorage
+  const navigate = useNavigate();  // Initialize navigate to handle page redirection
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const newTask = {
+      title: taskTitle,
+      description: taskDescription,
+      due_date: dueDate || null,
+      completed: completed,
+    };
+
+    try {
+      // Send the task data along with the JWT token in the header for authentication
+      const response = await axios.post('http://127.0.0.1:8000/tasks/', newTask, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,  // Add JWT token in the header
+        },
+      });
+
+      if (response.status === 201) {
+        setTaskTitle('');
+        setTaskDescription('');
+        setDueDate('');
+        setCompleted(false);
+        setSuccessMessage('Task added successfully!');
+        setError('');
+
+        // Redirect to the Task List page after successful task creation
+        setTimeout(() => {
+          navigate('/tasklist');  // Navigate to TaskList page
+        }, 1000);  // Small delay before navigation to display success message
+      }
+    } catch (err) {
+      console.error('Error Adding Task:', err.response ? err.response.data : err.message);
+      setError('Failed to add task. Please try again.');
+    }
+  };
+
+  return (
+    <div>
+      <h2>Create New Task</h2>
+      {error && <div style={{ color: 'red' }}>{error}</div>}
+      {successMessage && <div style={{ color: 'green' }}>{successMessage}</div>}
+
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Task Title:</label>
+          <input
+            type="text"
+            value={taskTitle}
+            onChange={(e) => setTaskTitle(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Task Description:</label>
+          <textarea
+            value={taskDescription}
+            onChange={(e) => setTaskDescription(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Due Date:</label>
+          <input
+            type="date"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>Completed:</label>
+          <input
+            type="checkbox"
+            checked={completed}
+            onChange={(e) => setCompleted(e.target.checked)}
+          />
+        </div>
+
+        <button type="submit">Add Task</button>
+      </form>
+    </div>
+  );
+};
+
+export default TaskForm;

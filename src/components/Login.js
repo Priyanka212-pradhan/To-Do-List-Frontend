@@ -6,6 +6,7 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate(); // To navigate after successful login
 
   const handleSubmit = async (e) => {
@@ -25,13 +26,41 @@ const Login = () => {
         },
       });
 
-      if (response.status === 200) {
-        // Redirect to the dashboard or home page after successful login
-        navigate('/dashboard'); // Replace with the actual path where you want the user to go
-      }
-    } catch (err) {
-      setError('Login failed. Please check your credentials and try again.');
+       // Check if token is present in response
+    if (response.data.access && response.data.refresh) {
+      localStorage.setItem('accessToken', response.data.access);
+      localStorage.setItem('refreshToken', response.data.refresh);
+
+      setSuccessMessage('Login successful!');
+        setError('');
+
+        // Redirect to TaskForm page after successful login
+        setTimeout(() => {
+          navigate('/taskform');  // Redirecting to task form page
+        }, 1000);
+
+    } else {
+      console.error('No token received in response:', response.data);
     }
+  } catch (error) {
+    console.error('Login Error:', error.response ? error.response.data : error.message);
+  }
+    //   if (response.status === 200) {
+    //     // Assuming the response contains a token
+    //     const token = response.data.token; // Token from Django backend
+    //     localStorage.setItem('authToken', token); // Store JWT token in localStorage
+    //
+    //     setSuccessMessage('Login successful!');
+    //     setError('');
+    //
+    //     // Redirect to TaskForm page after successful login
+    //     setTimeout(() => {
+    //       navigate('/taskform');  // Redirecting to task form page
+    //     }, 1000);
+    //   }
+    // } catch (err) {
+    //   setError('Login failed. Please check your credentials and try again.');
+    // }
   };
 
   return (
@@ -40,6 +69,7 @@ const Login = () => {
         <h2 style={styles.heading}>Login</h2>
 
         {error && <div style={styles.errorMessage}>{error}</div>}
+        {successMessage && <div style={styles.successMessage}>{successMessage}</div>}
 
         <form onSubmit={handleSubmit}>
           <div style={styles.inputGroup}>
@@ -132,6 +162,11 @@ const styles = {
   },
   errorMessage: {
     color: 'red',
+    marginBottom: '15px',
+    fontSize: '14px',
+  },
+  successMessage: {
+    color: 'green',
     marginBottom: '15px',
     fontSize: '14px',
   },
