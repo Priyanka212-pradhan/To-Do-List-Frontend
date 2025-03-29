@@ -2,6 +2,9 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Registration from './components/Registration';  // Correct path
 import Login from './components/Login';  // Correct path
+import TaskForm from './components/TaskForm';  // Correct path for TaskForm
+import TaskList from './components/TaskList';
+
 
 function App() {
   return (
@@ -10,7 +13,8 @@ function App() {
         <Routes>
           <Route path="/register" element={<Registration />} />
           <Route path="/login" element={<Login />} />
-          {/* You can also add a route for the dashboard or home page here */}
+          <Route path="/taskform" element={<TaskForm />} />  {/* Added TaskForm Route */}
+          <Route path="/taskform" element={<TaskList />} />  {/* Added TaskForm Route */}
         </Routes>
       </div>
     </Router>
