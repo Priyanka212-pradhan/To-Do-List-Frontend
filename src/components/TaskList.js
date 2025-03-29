@@ -5,6 +5,12 @@ const TaskList = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [editingTask, setEditingTask] = useState(null);  // For storing the task to be edited
+  const [updatedTitle, setUpdatedTitle] = useState('');
+  const [updatedDescription, setUpdatedDescription] = useState('');
+  const [updatedDueDate, setUpdatedDueDate] = useState('');
+  const [updatedCompleted, setUpdatedCompleted] = useState(false);
+
   const token = localStorage.getItem('accessToken');  // Get the JWT token from localStorage
 
   // Fetch tasks on component mount
@@ -59,6 +65,40 @@ const TaskList = () => {
     }
   };
 
+  // Handle edit task
+  const handleEdit = (task) => {
+    setEditingTask(task);
+    setUpdatedTitle(task.title);
+    setUpdatedDescription(task.description);
+    setUpdatedDueDate(task.due_date);
+    setUpdatedCompleted(task.completed);
+  };
+
+  // Handle saving the edited task
+  const handleSaveEdit = async (taskId) => {
+    const updatedTask = {
+      title: updatedTitle,
+      description: updatedDescription,
+      due_date: updatedDueDate || null,
+      completed: updatedCompleted,
+    };
+
+    try {
+      await axios.put(`http://127.0.0.1:8000/tasks/${taskId}/`, updatedTask, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      // Update task in state after edit
+      setTasks(tasks.map((task) => (task.id === taskId ? { ...task, ...updatedTask } : task)));
+      setEditingTask(null);  // Close edit mode
+      setError('');
+    } catch (err) {
+      setError('Failed to update task.');
+    }
+  };
+
   return (
     <div className="task-list-container">
       <h2>Your Tasks</h2>
@@ -91,9 +131,14 @@ const TaskList = () => {
                   </button>
                 </td>
                 <td>
-                  <button onClick={() => handleDelete(task.id)} className="delete-button">
-                    Delete
-                  </button>
+                  <div className="task-actions">
+                    <button onClick={() => handleEdit(task)} className="edit-button">
+                      Edit
+                    </button>
+                    <button onClick={() => handleDelete(task.id)} className="delete-button">
+                      Delete
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))
@@ -104,6 +149,50 @@ const TaskList = () => {
           )}
         </tbody>
       </table>
+
+      {/* Edit Modal */}
+      {editingTask && (
+        <div className="edit-modal">
+          <h3>Edit Task</h3>
+          <div>
+            <label>Title:</label>
+            <input
+              type="text"
+              value={updatedTitle}
+              onChange={(e) => setUpdatedTitle(e.target.value)}
+            />
+          </div>
+          <div>
+            <label>Description:</label>
+            <textarea
+              value={updatedDescription}
+              onChange={(e) => setUpdatedDescription(e.target.value)}
+            />
+          </div>
+          <div>
+            <label>Due Date:</label>
+            <input
+              type="date"
+              value={updatedDueDate}
+              onChange={(e) => setUpdatedDueDate(e.target.value)}
+            />
+          </div>
+          <div>
+            <label>Completed:</label>
+            <input
+              type="checkbox"
+              checked={updatedCompleted}
+              onChange={(e) => setUpdatedCompleted(e.target.checked)}
+            />
+          </div>
+          <button onClick={() => handleSaveEdit(editingTask.id)} className="save-button">
+            Save Changes
+          </button>
+          <button onClick={() => setEditingTask(null)} className="cancel-button">
+            Cancel
+          </button>
+        </div>
+      )}
     </div>
   );
 };
@@ -157,7 +246,12 @@ const styles = `
     color: white;
   }
 
-  .delete-button {
+  .task-actions {
+    display: flex;
+    gap: 10px;  /* Add space between buttons */
+  }
+
+  .delete-button, .edit-button {
     background-color: #FF6347;
     color: white;
     padding: 5px 10px;
@@ -166,7 +260,54 @@ const styles = `
     cursor: pointer;
   }
 
-  .delete-button:hover {
+  .delete-button:hover, .edit-button:hover {
+    background-color: #e53e3e;
+  }
+
+  .edit-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    z-index: 1000;
+  }
+
+  .edit-modal input, .edit-modal textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+
+  .save-button, .cancel-button {
+    padding: 10px 20px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .save-button {
+    background-color: #4CAF50;
+    color: white;
+  }
+
+  .cancel-button {
+    background-color: #FF6347;
+    color: white;
+  }
+
+  .save-button:hover {
+    background-color: #45a049;
+  }
+
+  .cancel-button:hover {
     background-color: #e53e3e;
   }
 
@@ -177,7 +318,6 @@ const styles = `
   }
 `;
 
-// Inject the CSS into the page
 const styleSheet = document.createElement("style");
 styleSheet.type = "text/css";
 styleSheet.innerText = styles;
