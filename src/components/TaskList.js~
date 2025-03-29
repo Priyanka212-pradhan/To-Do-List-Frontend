@@ -126,7 +126,6 @@ const TaskList = () => {
                   <select
                     value={task.completed ? 'Completed' : 'Pending'}
                     onChange={(e) => handleStatusChange(task.id, e.target.value)}
-                    className={task.completed ? 'completed-status' : 'pending-status'}
                   >
                     <option value="Pending">Pending</option>
                     <option value="Completed">Completed</option>
@@ -238,6 +237,16 @@ const styles = `
     background-color: #f9f9f9;
   }
 
+  .completed {
+    background-color: #4CAF50;
+    color: white;
+  }
+
+  .not-completed {
+    background-color: #FF9800;
+    color: white;
+  }
+
   .task-actions {
     display: flex;
     gap: 10px;  /* Add space between buttons */
@@ -307,34 +316,6 @@ const styles = `
     color: red;
     font-size: 16px;
     text-align: center;
-  }
-
-  /* Styling for dropdown */
-  select {
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    background-color: #f8f8f8;
-    transition: background-color 0.3s, border 0.3s;
-  }
-
-  select:focus {
-    border: 1px solid #4CAF50;
-    background-color: #fff;
-  }
-
-  .completed-status {
-    background-color: #4CAF50;
-    color: white;
-  }
-
-  .pending-status {
-    background-color: #FF9800;
-    color: white;
-  }
-
-  .completed-status:hover, .pending-status:hover {
-    background-color: #45a049;
   }
 `;
 
