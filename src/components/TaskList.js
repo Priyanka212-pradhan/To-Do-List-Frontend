@@ -27,19 +27,19 @@ const TaskList = () => {
     fetchTasks();
   }, [token]);
 
-  // // Handle delete task
-  // const handleDelete = async (taskId) => {
-  //   try {
-  //     await axios.delete(`http://127.0.0.1:8000/tasks/${taskId}/`, {
-  //       headers: {
-  //         'Authorization': `Bearer ${token}`,  // Add JWT token in the header
-  //       },
-  //     });
-  //     setTasks(tasks.filter((task) => task.id !== taskId));  // Remove task from the state
-  //   } catch (err) {
-  //     setError('Failed to delete task.');
-  //   }
-  // };
+  // Handle delete task
+  const handleDelete = async (taskId) => {
+    try {
+      await axios.delete(`http://127.0.0.1:8000/tasks/${taskId}/`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,  // Add JWT token in the header
+        },
+      });
+      setTasks(tasks.filter((task) => task.id !== taskId));  // Remove task from the state
+    } catch (err) {
+      setError('Failed to delete task.');
+    }
+  };
 
   // Handle mark task as completed
   const handleComplete = async (taskId) => {
@@ -90,11 +90,11 @@ const TaskList = () => {
                     {task.completed ? 'Completed' : 'Mark as Complete'}
                   </button>
                 </td>
-                {/*<td>*/}
-                {/*  <button onClick={() => handleDelete(task.id)} className="delete-button">*/}
-                {/*    Delete*/}
-                {/*  </button>*/}
-                {/*</td>*/}
+                <td>
+                  <button onClick={() => handleDelete(task.id)} className="delete-button">
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))
           ) : (
