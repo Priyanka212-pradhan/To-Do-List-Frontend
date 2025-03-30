@@ -18,7 +18,7 @@ const Navbar = () => {
         <li><Link to="/register">Register</Link></li>
         <li><Link to="/login">Login</Link></li>
         <li><Link to="/taskform">Add Task</Link></li>
-        <li><Link to="/tasklist">View List</Link></li>
+        <li><Link to="/tasklist">Task List</Link></li>
         <li className="logout-text" onClick={handleLogout}>Logout</li>
       </ul>
     </nav>
