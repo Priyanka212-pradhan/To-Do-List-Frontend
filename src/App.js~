@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from "./components/Navbar";
 import Registration from './components/Registration';  // Correct path
 import Login from './components/Login';  // Correct path
 import TaskForm from './components/TaskForm';  // Correct path for TaskForm
@@ -14,7 +15,7 @@ function App() {
           <Route path="/register" element={<Registration />} />
           <Route path="/login" element={<Login />} />
           <Route path="/taskform" element={<TaskForm />} />  {/* Added TaskForm Route */}
-          <Route path="/taskform" element={<TaskList />} />  {/* Added TaskForm Route */}
+          <Route path="/tasklist" element={<TaskList />} />  {/* Added TaskForm Route */}
         </Routes>
       </div>
     </Router>
