@@ -23,7 +23,7 @@ const Registration = () => {
 
         try {
             // Make POST request to Django registration API endpoint
-            const response = await axios.post('http://127.0.0.1:8000/register/', userData, {
+            const response = await axios.post('https://to-do-list-backend-git-main-priyankas-projects-7974bcbc.vercel.app/register/', userData, {
                 headers: {
                     'Content-Type': 'application/json',
                 },

@@ -17,7 +17,7 @@ const TaskList = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/tasks/', {
+        const response = await axios.get('https://to-do-list-backend-git-main-priyankas-projects-7974bcbc.vercel.app/tasks/', {
           headers: {
             'Authorization': `Bearer ${token}`,  // Add JWT token in the header
           },
@@ -36,7 +36,7 @@ const TaskList = () => {
   // Handle delete task
   const handleDelete = async (taskId) => {
     try {
-      await axios.delete(`http://127.0.0.1:8000/tasks/${taskId}/`, {
+      await axios.delete(`https://to-do-list-backend-git-main-priyankas-projects-7974bcbc.vercel.app/tasks/${taskId}/`, {
         headers: {
           'Authorization': `Bearer ${token}`,  // Add JWT token in the header
         },
@@ -53,7 +53,7 @@ const TaskList = () => {
       const updatedTask = tasks.find((task) => task.id === taskId);
       updatedTask.completed = status === 'Completed'; // Set the status based on dropdown value
 
-      await axios.put(`http://127.0.0.1:8000/tasks/${taskId}/`, updatedTask, {
+      await axios.put(`https://to-do-list-backend-git-main-priyankas-projects-7974bcbc.vercel.app/tasks/${taskId}/`, updatedTask, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -84,7 +84,7 @@ const TaskList = () => {
     };
 
     try {
-      await axios.put(`http://127.0.0.1:8000/tasks/${taskId}/`, updatedTask, {
+      await axios.put(`https://to-do-list-backend-git-main-priyankas-projects-7974bcbc.vercel.app/tasks/${taskId}/`, updatedTask, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
