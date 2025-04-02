@@ -20,7 +20,7 @@ const Login = () => {
 
     try {
       // Make POST request to Django login API endpoint
-      const response = await axios.post('http://127.0.0.1:8000/login/', userData, {
+      const response = await axios.post('https://to-do-list-backend-git-main-priyankas-projects-7974bcbc.vercel.app/login/', userData, {
         headers: {
           'Content-Type': 'application/json',
         },
